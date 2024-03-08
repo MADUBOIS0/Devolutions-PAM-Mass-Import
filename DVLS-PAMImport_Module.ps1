@@ -2,7 +2,6 @@
 This module will be used to massively import DVLS Pam ACcount from an external source.
 The source is a preformated CSV File 
 
-https://devolutions.atlassian.net/wiki/spaces/Support/pages/3702161608/DVLS+PAM+Accounts+import+from+CSV
 
 ********************************************************************************************************
 Cheat sheet
@@ -15,13 +14,13 @@ TeamFolderID : ID of the Vault
 
 # Environment Variables
 # URI of the DVLS Instance
-$DVLSURI = "dvls URI"
+$DVLSURI = ""
 # Path of the CSV to import
-$csvPath = "c:\temp\MassImportDVLSPAM.csv"
+$csvPath = ""
 # App key and secret - Must be admin in DVLS
 
-$AppKey = "appkey"
-$AppSecret = "appsecret"
+$AppKey = ""
+$AppSecret = ""
 
 
 Function Connect-DVLSWithAppKey {
@@ -459,48 +458,4 @@ Function Set-DVLSPAMAccountPermission{
     
     # might need to perform a TRY here
     $r = Update-DSPamAccount -PamAccount $pamAccnt.Data -Security $pamPermission
-    return $r
-}
-
-
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-
-# Utilitary functions for testingpurpose
-# To be Deleted before deploying
-function create-batchADAccounts{
-# This function will create several accounts suffixed with "n"
-# Executed it directly on the domain controller
-    for($i = 0; $i -lt 40; $i++){
-        $pw = ConvertTo-SecureString ("SafePassw0rd!") -Force -AsPlainText
-        New-ADUser -Name "ImportedPamAcc$i"  -Path "OU=DVLSPamAccountForMassImport,OU=OU_AlexBelisle,DC=westeros,DC=loc" -ChangePasswordAtLogon $false -PasswordNeverExpires $true -SamAccountName "ImportedPamAcc$i" -UserPrincipalName "ImportedPamAcc$i" -AccountPassword $pw
-        Enable-ADAccount -Identity "ImportedPamAcc$i"
-    }
-}
-
-function Get-DVLSPamAccountPermission{
-
-    # domain westerosProv > abelisle
-    $pamAccountID = "abcdecf2-057d-4fdb-a75c-750173e41b55"
-    # ssh vsrv-redhat.lab.loc > Pamaccount2
-    # $pamAccountID = "9a1a3ea1-77f7-48c0-9564-31c05c7abd3f"
-    ConnectToDVLS
-
-    $sec = Get-DSPamAccountSecurity -ID  $pamAccountID
-    $sec.Body.data
-
-}
-
-function Get-DVLSPamFolderPermission{
-
-    # Vault vsr-redhat.lab.loc
-    $folderID = "60274f8a-83dc-4dca-90d0-5ca8f984125d"
-
-    ConnectToDVLS
-    $secF = Get-DSPamFolderSecurity -ID  $folderID
-
-
-}
+    return $r}
